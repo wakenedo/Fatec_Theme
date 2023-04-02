@@ -1,73 +1,20 @@
-const slides = document.querySelectorAll('.slide');
-const prevBtn = document.querySelector('.prev');
-const nextBtn = document.querySelector('.next');
-const bullets = document.querySelector('.bullets');
+document.addEventListener('DOMContentLoaded', function () {
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
 
-let slidePosition = 0;
-
-function goToSlide(n) {
-  slidePosition = n;
-
-  // Hide all slides
-  for (let i = 0; i < slides.length; i++) {
-    slides[i].classList.remove('active');
+  function showSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (n + slides.length) % slides.length;
+    slides[currentSlide].classList.add('active');
   }
 
-  // Show the slide at the current position
-  slides[slidePosition].classList.add('active');
+  const prev = document.querySelector('.prev');
+  prev.addEventListener('click', function () {
+    showSlide(currentSlide - 1);
+  });
 
-  // Update bullets
-  updateBullets();
-}
-
-function updateBullets() {
-  // Remove all active bullets
-  bullets.innerHTML = '';
-
-  // Create bullets for each slide
-  for (let i = 0; i < slides.length; i++) {
-    const bullet = document.createElement('span');
-    bullet.classList.add('bullet');
-
-    // Add an "active" class to the current bullet
-    if (i === slidePosition) {
-      bullet.classList.add('active');
-    }
-
-    // Add click event listener to bullets
-    bullet.addEventListener('click', function () {
-      goToSlide(i);
-    });
-
-    bullets.appendChild(bullet);
-  }
-}
-
-// Go to the next slide
-function nextSlide() {
-  if (slidePosition === slides.length - 1) {
-    slidePosition = 0;
-  } else {
-    slidePosition++;
-  }
-
-  goToSlide(slidePosition);
-}
-
-// Go to the previous slide
-function prevSlide() {
-  if (slidePosition === 0) {
-    slidePosition = slides.length - 1;
-  } else {
-    slidePosition--;
-  }
-
-  goToSlide(slidePosition);
-}
-
-// Add click event listeners to buttons
-nextBtn.addEventListener('click', nextSlide);
-prevBtn.addEventListener('click', prevSlide);
-
-// Initialize carousel
-goToSlide(0);
+  const next = document.querySelector('.next');
+  next.addEventListener('click', function () {
+    showSlide(currentSlide + 1);
+  });
+});
